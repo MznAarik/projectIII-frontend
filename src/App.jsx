@@ -6,11 +6,20 @@ import axios from 'axios'
 
 function App() {
   const [count, setCount] = useState(0)
-  useEffect(() => {
-    axios.get('api/test').then(response => console.log(response.data))
-      .catch(error => console.error('API error', error));
-  }, []);
+  const [apiData, setApiData] = useState(null);
 
+  const Test = async () => {
+    try {
+      const response = await axios.get('api/test');
+      setApiData(response.data)
+    } catch (error) {
+      console.error('API error', error);
+    }
+  }
+
+  useEffect(() => {
+    Test();
+  }, [])
   return (
     <>
       <div>
@@ -21,7 +30,7 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <h1>Vite + React</h1>
+      <h1>{apiData ? apiData.message : "Loading..."}</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
